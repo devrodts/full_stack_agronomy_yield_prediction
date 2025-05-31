@@ -1,9 +1,7 @@
+import React, { useState, type FormEvent } from 'react';
+import axios, { type AxiosError } from 'axios';
+import { type CropData, type BackendErrorPayload, type PredictionResponse, type SuccessResponse } from './types';
 
-import React, { useState, FormEvent } from 'react';
-import axios, { AxiosError } from 'axios';
-import { CropData, PredictionResponse, BackendErrorPayload, SuccessResponse } from './types';
-
-// Helper to create a basic loading spinner or message
 const LoadingIndicator: React.FC = () => (
   <div className="mt-4 p-3 bg-blue-100 border border-blue-300 rounded-md text-blue-700">
     Processing...
@@ -40,7 +38,7 @@ const ResponseDisplay: React.FC<ResponseDisplayProps> = ({ data, isError, isLoad
         <p>{successData.predicted_yield}</p>
       </div>
     );
-  } else if (!isError && data && 'status' in data && (data as SuccessResponse).status === 'success') { // SuccessResponse (e.g. for retrain)
+  } else if (!isError && data && 'status' in data && (data as SuccessResponse).status === 'success') { 
     const successData = data as SuccessResponse;
     return (
       <div className={`${baseClasses} bg-green-100 border-green-400 text-green-700`}>
@@ -49,8 +47,6 @@ const ResponseDisplay: React.FC<ResponseDisplayProps> = ({ data, isError, isLoad
       </div>
     );
   }
-
-  // Fallback for generic string errors or unexpected structures
   return (
     <div className={`${baseClasses} ${isError ? 'bg-red-100 border-red-400 text-red-700' : 'bg-gray-100 border-gray-300 text-gray-700'}`}>
       <pre>{typeof data === 'string' ? data : JSON.stringify(data, null, 2)}</pre>
