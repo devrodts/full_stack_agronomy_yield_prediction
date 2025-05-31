@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  agri_ai_backend:
+    build:
+      context: ./agri_ai_backend
+      dockerfile: Dockerfile
+    container_name: agri_ai_backend_container
+    ports:
+      - "8080:8080"
+    environment:
+      - RUST_LOG=info,agri_ai_backend=debug # Example: Set log level
+    volumes:
+      - ./agri_ai_backend/model_data:/app/model_data
+    restart: unless-stopped
+
+  agri_ai_frontend:
+    build:
+      context: ./agri_ai_frontend
+      dockerfile: Dockerfile
+    container_name: agri_ai_frontend_container
+    ports:
+      - "8000:80" # Map Nginx port 80 in container to host port 8000
+                  # Access the app via http://localhost:8000
+    depends_on:
+      - agri_ai_backend 
+    restart: unless-stopped
